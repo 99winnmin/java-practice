@@ -1,5 +1,7 @@
 package next.reflection;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -61,6 +63,29 @@ public class ReflectionTest {
             }
             sb.append("return type : ").append(method.getReturnType()).append("\n");
             logger.debug(sb.toString());
+        }
+    }
+
+    @Test
+    @DisplayName("테스트5: 자바 Reflection API를 활용해 다음 Student 클래스의 name과 age 필드에 값을 할당한 후 getter 메소드를 통해 값을 확인한다.")
+    public void privateFieldAccess() {
+        Class<Student> clazz = Student.class;
+        logger.debug(clazz.getName());
+        try {
+            Student student = new Student();
+
+            Field nameField = clazz.getDeclaredField("name");
+            nameField.setAccessible(true);
+            nameField.set(student, "유승민");
+
+            Field ageField = clazz.getDeclaredField("age");
+            ageField.setAccessible(true);
+            ageField.set(student, 26);
+
+            assertThat(student.getName()).isEqualTo("유승민");
+            assertThat(student.getAge()).isEqualTo(26);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 }
